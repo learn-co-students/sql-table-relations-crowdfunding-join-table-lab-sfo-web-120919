@@ -7,25 +7,52 @@
 # Make sure each ruby method returns a string containing a valid SQL statement.
 
 def selects_the_titles_of_all_projects_and_their_pledge_amounts_alphabetized_by_title
-  "Write your SQL query Here"
+  "SELECT projects.title AS title, SUM(pledges.amount) AS amount
+   FROM projects, pledges
+   WHERE projects.id = pledges.project_id
+   GROUP BY projects.title
+   ORDER BY projects.title ASC, pledges.amount DESC"
 end
 
 def selects_the_user_name_age_and_pledge_amount_for_all_pledges_alphabetized_by_name
-  "Write your SQL query Here"
+  "SELECT users.name AS name, users.age AS age, SUM(pledges.amount) AS amount
+   FROM users, pledges
+   WHERE users.id = pledges.user_id
+   GROUP BY users.name
+   ORDER BY name"
 end
 
 def selects_the_titles_and_amount_over_goal_of_all_projects_that_have_met_their_funding_goal
-  "Write your SQL query Here"
+  # the amount of the pledges > 
+  "SELECT title, amount_over
+  FROM (SELECT projects.title AS title, (SUM(pledges.amount) - projects.funding_goal) AS amount_over
+   FROM projects, pledges
+   WHERE projects.id = pledges.project_id
+   GROUP BY projects.title)
+   WHERE amount_over >= 0"
 end
 
 def selects_user_names_and_amounts_of_all_pledges_grouped_by_name_then_orders_them_by_the_summed_amount
-  "Write your SQL query Here"
+  "SELECT users.name, SUM(pledges.amount)
+   FROM users, pledges
+   WHERE users.id = pledges.user_id
+   GROUP BY users.name
+   ORDER BY SUM(pledges.amount)"
 end
 
 def selects_the_category_names_and_pledge_amounts_of_all_pledges_in_the_music_category
-  "Write your SQL query Here"
+  "SELECT music_projects.category AS category, pledges.amount AS pledge_amount 
+  FROM (SELECT *
+        FROM projects
+        WHERE category = 'music') AS music_projects, pledges
+  WHERE music_projects.id = pledges.project_id"
+  
 end
 
 def selects_the_category_name_and_the_sum_total_of_the_all_its_pledges_for_the_books_category
-  "Write your SQL query Here"
+  "SELECT books_projects.category, SUM(pledges.amount)
+   FROM (SELECT * FROM projects WHERE category = 'books') AS books_projects, pledges
+   WHERE books_projects.id = pledges.project_id
+   GROUP BY books_projects.category
+   "
 end
